@@ -149,7 +149,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
   const withDaemon = withBanner.addDaemon('electrumx', {
     subcontainer: sub,
     exec: {
-      command: ['python3', '-m', 'electrumx_server'],
+      command: ['electrumx_server'],
       env,
       sigtermTimeout: 300_000, // ElectrumX needs time to flush LevelDB
     },
