@@ -30,11 +30,24 @@ RUN git clone --depth 1 --branch ${NMC_ELECTRUMX_BRANCH} ${NMC_ELECTRUMX_REMOTE}
 WORKDIR /build/src
 
 # Verify the websockets pin is present in the cloned tree. mstrofnone's
-# fix/pin-websockets branch carries `websockets<11` in setup.py; if a
-# later rebase loses that pin the WS/WSS transport breaks silently. Fail
-# the build loudly if upstream renames or drops it.
-RUN grep -E "^[^#]*websockets" setup.py && grep -E "websockets<11" setup.py \
-    || { echo "PATCH MISSING: websockets<11 pin not present in setup.py — refusing to build"; exit 1; }
+# fix/pin-websockets branch carries `'websockets>=6.0,<11'` in setup.py;
+# if a later rebase loses that upper bound the WS/WSS transport breaks
+# silently. Match the upper bound regardless of any preceding `>=N.N,`
+# fragment, so we tolerate upstream tweaking the lower bound.
+RUN python3 - <<'PY'
+import re, sys
+try:
+    src = open('setup.py').read()
+except FileNotFoundError:
+    print('PATCH CHECK: setup.py missing'); sys.exit(1)
+m = re.search(r"['\"]websockets([^'\"]*)['\"]", src)
+if not m:
+    print('PATCH CHECK: no websockets requirement found in setup.py'); sys.exit(1)
+spec = m.group(1)
+if not re.search(r'<\s*11\b', spec):
+    print(f'PATCH MISSING: websockets requirement {m.group(0)!r} has no <11 upper bound'); sys.exit(1)
+print(f'PATCH OK: websockets requirement = {m.group(0)}')
+PY
 
 # Runtime Python deps. Versions match the v0.3 wrapper that's been in
 # production on StartOS 0.3.5; bump in lockstep with upstream ElectrumX.
