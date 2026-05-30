@@ -56,6 +56,18 @@ export const electrumxMounts = sdk.Mounts.of()
 /** ===========================================================================
  * ElectrumX RPC types (from `electrumx_rpc getinfo`).
  * ===========================================================================
+ *
+ * Wire format gotcha: `electrumx_rpc getinfo` returns keys with SPACES
+ * (e.g. "daemon height", "db height", "request total") and the
+ * `sessions`/`peers` fields are NESTED OBJECTS, not numbers. Older
+ * versions of this wrapper read `info.daemon_height` / `info.db_height`
+ * straight off the JSON and got `undefined`, which the healthcheck
+ * coerced to 0 — making the "Blockchain Sync" status stick on
+ * "Connecting to peers…" forever even while the indexer was happily
+ * churning, and the runtime-info action render "[object Object]" for
+ * Active Sessions. Always go through `normalizeGetInfo()`.
+ *
+ * Reference: https://electrumx.readthedocs.io/en/latest/rpc-interface.html#getinfo
  */
 export type ElectrumxGetInfo = {
   version?: string
@@ -76,6 +88,58 @@ export type ElectrumxGetInfo = {
   pid?: number
   request_total?: number
   groups?: number
+}
+
+/**
+ * Map the on-the-wire shape (spaces + nested objects) to the camelCase
+ * shape used by main.ts and the runtime-info action. Keys with spaces
+ * win over their underscore equivalents when both happen to exist
+ * (defensive: future fork could emit either).
+ */
+export function normalizeGetInfo(raw: any): ElectrumxGetInfo {
+  if (!raw || typeof raw !== 'object') return {}
+  const num = (v: unknown): number | undefined => {
+    if (typeof v === 'number') return v
+    if (typeof v === 'string' && v.trim() !== '' && !isNaN(Number(v)))
+      return Number(v)
+    return undefined
+  }
+  const sessions = raw['sessions']
+  const sessionCount =
+    typeof sessions === 'object' && sessions !== null
+      ? num((sessions as any)['count'])
+      : num(sessions)
+  const peers = raw['peers']
+  const peerCount =
+    typeof peers === 'object' && peers !== null
+      ? num((peers as any)['total']) ??
+        num((peers as any)['good']) ??
+        num((peers as any)['count'])
+      : num(peers)
+  return {
+    version: typeof raw['version'] === 'string' ? raw['version'] : undefined,
+    daemon: typeof raw['daemon'] === 'string' ? raw['daemon'] : undefined,
+    db_height: num(raw['db height']) ?? num(raw['db_height']),
+    daemon_height:
+      num(raw['daemon height']) ?? num(raw['daemon_height']),
+    daemon_synchronized:
+      typeof raw['daemon synchronized'] === 'boolean'
+        ? raw['daemon synchronized']
+        : typeof raw['daemon_synchronized'] === 'boolean'
+          ? raw['daemon_synchronized']
+          : undefined,
+    sessions: sessionCount,
+    peers: peerCount,
+    peer_count: peerCount,
+    request_count: num(raw['request count']) ?? num(raw['request_count']),
+    request_total: num(raw['request total']) ?? num(raw['request_total']),
+    closing: num(raw['closing']),
+    errors: num(raw['errors']),
+    logged: num(raw['logged']),
+    paused: num(raw['paused']),
+    pid: num(raw['pid']),
+    groups: num(raw['groups']),
+  }
 }
 
 /** Build the ElectrumX admin RPC argv. Targets the local rpc:// listener. */

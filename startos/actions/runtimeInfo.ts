@@ -5,6 +5,7 @@ import {
   ElectrumxGetInfo,
   electrumxMounts,
   electrumxRpcArgs,
+  normalizeGetInfo,
 } from '../utils'
 
 /**
@@ -47,7 +48,7 @@ export const runtimeInfo = sdk.Action.withoutInput(
 
     let info: ElectrumxGetInfo
     try {
-      info = JSON.parse(res.stdout)
+      info = normalizeGetInfo(JSON.parse(res.stdout))
     } catch {
       return {
         version: '1' as const,

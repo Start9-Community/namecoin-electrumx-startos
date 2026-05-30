@@ -12,6 +12,7 @@ import {
   electrumWssPort,
   electrumxMounts,
   electrumxRpcArgs,
+  normalizeGetInfo,
   rootDir,
   rpcPort,
   sslCert,
@@ -197,7 +198,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
 
         let info: ElectrumxGetInfo
         try {
-          info = JSON.parse(res.stdout)
+          info = normalizeGetInfo(JSON.parse(res.stdout))
         } catch {
           return {
             result: 'starting',
@@ -255,7 +256,15 @@ export const main = sdk.setupMain(async ({ effects }) => {
         }
       },
     },
-    requires: ['electrumx'],
+    // NOTE: we deliberately do NOT require the `electrumx` healthcheck here.
+    // The TCP/SSL/WS/WSS client listeners only come up AFTER first sync
+    // to tip (ElectrumX won't serve potentially stale data while it's
+    // catching up). If we gate sync-progress on the electrumx healthcheck,
+    // the user sees "waiting on ElectrumX" for the entire multi-hour
+    // initial sync — which is exactly when they most want progress
+    // feedback. The LocalRPC port (8000) is up from start and is what
+    // we poll via `electrumx_rpc getinfo`, so this check stands alone.
+    requires: [],
   })
 
   return withSyncProgress
