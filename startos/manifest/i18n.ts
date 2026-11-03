@@ -4,7 +4,7 @@ export const short = {
   es_ES:
     'Servidor Electrum para Namecoin — permite a carteras ligeras resolver nombres y verificar transacciones',
   de_DE:
-    'Electrum-Protokoll-Server für Namecoin — ermöglicht es Light-Wallets, Namen aufzulösen und Transaktionen zu verifizieren',
+    'Electrum-Server für Namecoin — Light-Wallets lösen Namen auf und verifizieren Transaktionen',
   pl_PL:
     'Serwer protokołu Electrum dla Namecoina — pozwala lekkim portfelom rozwiązywać nazwy i weryfikować transakcje',
   fr_FR:
