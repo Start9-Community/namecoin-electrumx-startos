@@ -19,7 +19,9 @@ export const inputSpec = InputSpec.of({
   }),
   maxSessions: Value.number({
     name: i18n('Max Sessions'),
-    description: i18n('Maximum number of concurrent Electrum client connections.'),
+    description: i18n(
+      'Maximum number of concurrent Electrum client connections.',
+    ),
     required: true,
     default: 1000,
     min: 10,

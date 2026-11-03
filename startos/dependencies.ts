@@ -1,3 +1,4 @@
+import { namecoindDescription } from './manifest/i18n'
 import { sdk } from './sdk'
 
 /**
@@ -7,12 +8,15 @@ import { sdk } from './sdk'
  * its config from here — we just require the package to be installed and
  * running, and let its own `sync-progress` health check gate readiness.
  */
-export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
-  return {
-    namecoind: {
-      kind: 'running',
-      versionRange: '>=30.2.0.3:0',
-      healthChecks: [],
-    },
-  }
+const namecoind = sdk.Dependency.required('namecoind', {
+  description: namecoindDescription,
+  metadata: {
+    title: 'Namecoin Core',
+    icon: 'https://raw.githubusercontent.com/Start9-Community/namecoin-core-startos/main/icon.svg',
+  },
+  kind: 'running',
+  versionRange: '>=30.2.0.3:0',
+  healthChecks: [],
 })
+
+export const dependencies = sdk.Dependencies.of().addDependency(namecoind)

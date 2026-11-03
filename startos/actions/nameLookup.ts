@@ -104,6 +104,7 @@ export const nameLookup = sdk.Action.withInput(
                 copyable: true,
                 qr: false,
                 masked: false,
+                launchable: false,
               },
             }
           }
@@ -127,6 +128,7 @@ export const nameLookup = sdk.Action.withInput(
           copyable: true,
           qr: false,
           masked: false,
+          launchable: false,
         },
       }
     }
@@ -144,6 +146,7 @@ export const nameLookup = sdk.Action.withInput(
         copyable: true,
         qr: false,
         masked: false,
+        launchable: false,
       },
     }
   },

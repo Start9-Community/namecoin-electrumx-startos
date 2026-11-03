@@ -1,5 +1,5 @@
 import { setupManifest } from '@start9labs/start-sdk'
-import { long, namecoindDescription, short } from './i18n'
+import { long, short } from './i18n'
 
 export const manifest = setupManifest({
   id: 'namecoin-electrumx',
@@ -27,17 +27,6 @@ export const manifest = setupManifest({
         },
       },
       arch: ['x86_64', 'aarch64'],
-    },
-  },
-  dependencies: {
-    namecoind: {
-      description: namecoindDescription,
-      // Hard dependency: ElectrumX cannot run without namecoind.
-      optional: false,
-      metadata: {
-        title: 'Namecoin Core',
-        icon: 'https://raw.githubusercontent.com/Start9-Community/namecoin-core-startos/main/icon.svg',
-      },
     },
   },
 })

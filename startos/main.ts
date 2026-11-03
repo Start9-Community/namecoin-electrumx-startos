@@ -60,9 +60,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
         command: [
           'sh',
           '-c',
-          reindexPending
-            ? `rm -rf ${dbDir} && mkdir -p ${dbDir}`
-            : 'true',
+          reindexPending ? `rm -rf ${dbDir} && mkdir -p ${dbDir}` : 'true',
         ],
       },
       requires: ['ensure-dirs'],
@@ -72,7 +70,10 @@ export const main = sdk.setupMain(async ({ effects }) => {
       exec: {
         fn: async () => {
           if (reindexPending) {
-            await storeJson.merge(effects, { reindex: false, fullySynced: false })
+            await storeJson.merge(effects, {
+              reindex: false,
+              fullySynced: false,
+            })
           }
           return null
         },
@@ -141,7 +142,11 @@ export const main = sdk.setupMain(async ({ effects }) => {
     subcontainer: sub,
     exec: {
       command: cfg.banner
-        ? ['sh', '-c', `cat > ${bannerPath} <<'__EOF__'\n${cfg.banner}\n__EOF__`]
+        ? [
+            'sh',
+            '-c',
+            `cat > ${bannerPath} <<'__EOF__'\n${cfg.banner}\n__EOF__`,
+          ]
         : ['sh', '-c', `rm -f ${bannerPath}`],
     },
     requires: ['ensure-dirs'],

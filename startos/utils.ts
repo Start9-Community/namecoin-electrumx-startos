@@ -45,13 +45,12 @@ export const sslKey = `${sslDir}/server.key`
 export const namecoindDir = '/namecoind'
 export const namecoindCookie = `${namecoindDir}/.cookie`
 
-export const electrumxMounts = sdk.Mounts.of()
-  .mountVolume({
-    volumeId: 'main',
-    subpath: null,
-    mountpoint: rootDir,
-    readonly: false,
-  })
+export const electrumxMounts = sdk.Mounts.of().mountVolume({
+  volumeId: 'main',
+  subpath: null,
+  mountpoint: rootDir,
+  readonly: false,
+})
 
 /** ===========================================================================
  * ElectrumX RPC types (from `electrumx_rpc getinfo`).
@@ -112,16 +111,15 @@ export function normalizeGetInfo(raw: any): ElectrumxGetInfo {
   const peers = raw['peers']
   const peerCount =
     typeof peers === 'object' && peers !== null
-      ? num((peers as any)['total']) ??
+      ? (num((peers as any)['total']) ??
         num((peers as any)['good']) ??
-        num((peers as any)['count'])
+        num((peers as any)['count']))
       : num(peers)
   return {
     version: typeof raw['version'] === 'string' ? raw['version'] : undefined,
     daemon: typeof raw['daemon'] === 'string' ? raw['daemon'] : undefined,
     db_height: num(raw['db height']) ?? num(raw['db_height']),
-    daemon_height:
-      num(raw['daemon height']) ?? num(raw['daemon_height']),
+    daemon_height: num(raw['daemon height']) ?? num(raw['daemon_height']),
     daemon_synchronized:
       typeof raw['daemon synchronized'] === 'boolean'
         ? raw['daemon synchronized']
@@ -143,7 +141,10 @@ export function normalizeGetInfo(raw: any): ElectrumxGetInfo {
 }
 
 /** Build the ElectrumX admin RPC argv. Targets the local rpc:// listener. */
-export function electrumxRpcArgs(method: string, ...params: string[]): string[] {
+export function electrumxRpcArgs(
+  method: string,
+  ...params: string[]
+): string[] {
   return ['electrumx_rpc', '-p', String(rpcPort), method, ...params]
 }
 

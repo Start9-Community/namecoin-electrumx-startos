@@ -33,8 +33,7 @@ const dict = {
   'Performance Settings': 200,
   'Tune ElectrumX cache size and session limits': 201,
   'Cache Size (MB)': 202,
-  'Amount of memory to use for caching during sync. Larger values speed up the initial index but consume more RAM. Do not set above 60% of available RAM.':
-    203,
+  'Amount of memory to use for caching during sync. Larger values speed up the initial index but consume more RAM. Do not set above 60% of available RAM.': 203,
   MB: 204,
   'Max Sessions': 205,
   'Maximum number of concurrent Electrum client connections.': 206,
@@ -43,8 +42,7 @@ const dict = {
   'Logging Settings': 300,
   'Set the ElectrumX log verbosity': 301,
   'Log Level': 302,
-  'Verbosity of log output. Use debug for troubleshooting; info for normal operation.':
-    303,
+  'Verbosity of log output. Use debug for troubleshooting; info for normal operation.': 303,
   Debug: 304,
   Info: 305,
   Warning: 306,
@@ -54,50 +52,39 @@ const dict = {
   'Server Banner': 400,
   'Custom text shown to clients on connect': 401,
   Banner: 402,
-  'Free-form text served to Electrum clients on connect. Leave empty to disable.':
-    403,
+  'Free-form text served to Electrum clients on connect. Leave empty to disable.': 403,
   'Donation Address': 404,
-  'Optional NMC address advertised over the Electrum protocol so clients can tip the operator. Leave empty to disable.':
-    405,
+  'Optional NMC address advertised over the Electrum protocol so clients can tip the operator. Leave empty to disable.': 405,
 
   // actions/connectionConfig.ts
   'Namecoin Core Connection': 500,
-  'RPC credentials and host used to connect to namecoind. Auto-populated by the dependency configurator; only edit manually if you know what you are doing.':
-    501,
+  'RPC credentials and host used to connect to namecoind. Auto-populated by the dependency configurator; only edit manually if you know what you are doing.': 501,
   'RPC Username': 502,
-  'The RPC username configured on the Namecoin Core service for this ElectrumX instance.':
-    503,
+  'The RPC username configured on the Namecoin Core service for this ElectrumX instance.': 503,
   'RPC Password': 504,
-  'The plaintext RPC password matching the rpcauth entry on the Namecoin Core service.':
-    505,
+  'The plaintext RPC password matching the rpcauth entry on the Namecoin Core service.': 505,
   'RPC Host': 506,
-  'Hostname of the Namecoin Core service. Usually auto-configured by StartOS.':
-    507,
+  'Hostname of the Namecoin Core service. Usually auto-configured by StartOS.': 507,
   'RPC Port': 508,
   'JSON-RPC port of Namecoin Core. The default is 8336.': 509,
 
   // actions/configureDependent.ts (called by namecoind)
   'Configure ElectrumX → Namecoin Core': 600,
-  'Set the RPC credentials and host that this ElectrumX instance will use to connect to Namecoin Core. Invoked by the Namecoin Core dependency wiring; cannot be edited manually.':
-    601,
+  'Set the RPC credentials and host that this ElectrumX instance will use to connect to Namecoin Core. Invoked by the Namecoin Core dependency wiring; cannot be edited manually.': 601,
   'These fields were provided by a task and cannot be edited': 602,
 
   // actions/reindex.ts
   Reindex: 700,
   'Rebuild Index': 701,
   'Delete the ElectrumX index and rebuild it from Namecoin Core': 702,
-  'This will delete the ElectrumX index database and rebuild it from the Namecoin Core node. The reindex process can take several hours. ElectrumX will be unavailable to clients during this process.':
-    703,
+  'This will delete the ElectrumX index database and rebuild it from the Namecoin Core node. The reindex process can take several hours. ElectrumX will be unavailable to clients during this process.': 703,
   'Reindex scheduled. Restart ElectrumX to begin rebuilding the index.': 704,
-  'Restarting ElectrumX to rebuild the index. This may take several hours.':
-    705,
+  'Restarting ElectrumX to rebuild the index. This may take several hours.': 705,
 
   // actions/regenerateSsl.ts
   'Regenerate SSL Certificate': 800,
-  'Delete and regenerate the self-signed SSL/WSS certificate used by the SSL and WSS interfaces. ElectrumX must be restarted for clients to pick up the new certificate.':
-    801,
-  'Existing certificate deleted. A new one will be generated on next start.':
-    802,
+  'Delete and regenerate the self-signed SSL/WSS certificate used by the SSL and WSS interfaces. ElectrumX must be restarted for clients to pick up the new certificate.': 801,
+  'Existing certificate deleted. A new one will be generated on next start.': 802,
 
   // actions/runtimeInfo.ts (flatten model — informed by namecoin-core-startos
   // PR #7: keep ActionResult depth shallow so the dialog renders the key
@@ -128,13 +115,10 @@ const dict = {
   // exposes name resolution over its own Electrum protocol method, so
   // this is independent of the Namecoin Core action.)
   'Name Lookup': 1000,
-  'Resolve a Namecoin name via this ElectrumX server. Equivalent to the Electrum-protocol method `blockchain.name.get_value`.':
-    1001,
+  'Resolve a Namecoin name via this ElectrumX server. Equivalent to the Electrum-protocol method `blockchain.name.get_value`.': 1001,
   'Name to Look Up': 1002,
-  'A Namecoin name in namespace/name form. Examples: d/wikileaks (domain), id/alice (identity), dd/testls (DNS sub-namespace).':
-    1003,
-  'Must be namespace/name (lowercase namespace, alphanumerics/dot/underscore/dash in the name).':
-    1004,
+  'A Namecoin name in namespace/name form. Examples: d/wikileaks (domain), id/alice (identity), dd/testls (DNS sub-namespace).': 1003,
+  'Must be namespace/name (lowercase namespace, alphanumerics/dot/underscore/dash in the name).': 1004,
   'Name Lookup Result': 1005,
   'Found: ${name}': 1006,
   Value: 1007,
