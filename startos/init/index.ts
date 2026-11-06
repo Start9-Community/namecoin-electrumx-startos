@@ -11,8 +11,8 @@ export const init = sdk.setupInit(
   versionGraph,
   seedFiles,
   setInterfaces,
-  dependencies,
   actions,
+  dependencies,
 )
 
 export const uninit = sdk.setupUninit(versionGraph)

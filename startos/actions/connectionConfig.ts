@@ -4,11 +4,9 @@ import { sdk } from '../sdk'
 const { InputSpec, Value } = sdk
 
 /**
- * Manual override for the Namecoin Core RPC connection. Normally the
- * `configure-dependent` hidden action (called via the namecoind dependency
- * wiring) writes these fields. This action is kept enabled so the user can
- * debug an out-of-sync connection by hand, but in normal operation it
- * should not need to be touched.
+ * Manual override for the Namecoin Core RPC connection. Dependency init
+ * generates these fields and raises a Namecoin Core task to register them.
+ * This action stays enabled for debugging or custom connections.
  */
 export const inputSpec = InputSpec.of({
   rpcUser: Value.text({
@@ -59,7 +57,7 @@ export const connectionConfig = sdk.Action.withInput(
   async () => ({
     name: i18n('Namecoin Core Connection'),
     description: i18n(
-      'RPC credentials and host used to connect to namecoind. Auto-populated by the dependency configurator; only edit manually if you know what you are doing.',
+      'RPC credentials and host used to connect to namecoind. Auto-generated during dependency setup; only edit manually for a custom connection or credential recovery.',
     ),
     warning: null,
     allowedStatuses: 'any',

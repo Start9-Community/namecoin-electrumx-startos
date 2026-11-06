@@ -4,11 +4,13 @@ Namecoin ElectrumX is an Electrum-protocol server for the Namecoin blockchain. I
 
 ## Requirements
 
-- **Namecoin Core** must be installed, fully synced, and **not pruned** before ElectrumX can finish its own initial index. The transaction index (`txindex`) must be enabled in Namecoin Core's *Other Settings*. StartOS enforces the package dependency automatically.
+- **Namecoin Core 32.1 or newer** must be installed, fully synced, and **not pruned** before ElectrumX can finish its own initial index. The transaction index (`txindex`) must also be enabled. ElectrumX creates critical tasks on Namecoin Core for both settings and for its generated RPC credentials; run those tasks before starting ElectrumX.
 - At least **1 GB of free RAM** during the initial index. After that, the `Cache Size` setting (default 400 MB) controls steady-state memory use.
 - About **5–10 GB of free disk** for the ElectrumX index (separate from Namecoin Core's chain data).
 
 ## Initial Sync
+
+After installation, open the two critical tasks on **Namecoin Core** and run **Other Settings** and **Create RPC Credentials**. ElectrumX generates and stores the password automatically; there is nothing to copy. If Core was pruned, restart it after saving Other Settings and wait for its archival reindex to complete.
 
 On first start, ElectrumX downloads every block from your Namecoin Core node over JSON-RPC and rebuilds its own LevelDB index. This takes several hours on commodity hardware. The status card shows one of:
 
@@ -40,7 +42,7 @@ All settings are edited under **Actions** (grouped under *Configuration*) — th
 - **Performance Settings** — `Cache Size (MB)` and `Max Sessions`. The default 400 MB cache works well for steady-state operation; bump it to 1024–2048 MB to speed up the initial index if you have spare RAM. Do not exceed 60% of physical RAM.
 - **Logging Settings** — `debug` for troubleshooting; `info` for normal operation.
 - **Server Banner** — optional free-form text shown to Electrum clients on connect, plus an optional NMC donation address advertised over the protocol.
-- **Namecoin Core Connection** — the RPC username, password, and host used to reach Namecoin Core. **Normally auto-populated** by the package dependency wiring; only touch this if a credential refresh fails.
+- **Namecoin Core Connection** — the RPC username, password, and host used to reach Namecoin Core. **Automatically generated** during dependency setup and registered by Core's credential task; only edit this for credential recovery or a custom connection.
 
 ## Actions
 

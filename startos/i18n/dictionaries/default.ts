@@ -58,7 +58,7 @@ const dict = {
 
   // actions/connectionConfig.ts
   'Namecoin Core Connection': 500,
-  'RPC credentials and host used to connect to namecoind. Auto-populated by the dependency configurator; only edit manually if you know what you are doing.': 501,
+  'RPC credentials and host used to connect to namecoind. Auto-generated during dependency setup; only edit manually for a custom connection or credential recovery.': 501,
   'RPC Username': 502,
   'The RPC username configured on the Namecoin Core service for this ElectrumX instance.': 503,
   'RPC Password': 504,
@@ -130,6 +130,10 @@ const dict = {
   Configuration: 1100,
   Success: 1101,
   Failure: 1102,
+
+  // dependencies.ts
+  'ElectrumX requires an archival Namecoin Core node with the transaction index enabled. Disabling pruning may require a full blockchain reindex.': 1300,
+  'Register the generated RPC credentials so ElectrumX can read the Namecoin blockchain. The password is stored in ElectrumX; no copying is needed.': 1301,
 
   // Groups
   Performance: 1200,

@@ -71,16 +71,17 @@ Layout under `/data/electrumx`:
 - `start9/electrumx.json` — wrapper-managed config (cache, sessions, log level, banner, RPC creds)
 - `banner.txt` — written from `electrumx.json.banner` when set
 
-The package does **not** mount the Namecoin Core data volume. ElectrumX talks to namecoind over JSON-RPC using RPC-user credentials issued by the namecoind package (see [Dependencies](#dependencies)).
+The ElectrumX daemon does **not** mount the Namecoin Core data volume. Dependency init uses a temporary read-only mount only to verify that the generated RPC user is registered; the daemon itself talks to namecoind over JSON-RPC (see [Dependencies](#dependencies)).
 
 ---
 
 ## Installation and First-Run Flow
 
-1. Install Namecoin Core first. ElectrumX is a hard dependency on `namecoind` ≥ `30.2.0.3:0`.
+1. Install Namecoin Core 32.1 or newer. ElectrumX is a hard dependency on `namecoind` ≥ `32.1:0`.
 2. Wait for Namecoin Core to fully sync (it can take days on a fresh node, especially while [namecoin/namecoin-core#593](https://github.com/namecoin/namecoin-core/pull/593) — the missing DNS-seed regression — is unresolved upstream).
-3. Install Namecoin ElectrumX. The dependency wiring populates RPC credentials automatically.
-4. On first start, ElectrumX builds its index from the Namecoin chain via RPC. This takes several hours on commodity hardware; progress is reported phase-by-phase in the health check (see [Health Checks](#health-checks)).
+3. Install Namecoin ElectrumX. Two critical tasks appear on Namecoin Core: **Other Settings** (archival mode + `txindex`) and **Create RPC Credentials**. Run both. ElectrumX generates and stores the credential pair; no password copying is needed.
+4. If Core was previously pruned, restart it after **Other Settings** and allow the required archival reindex to finish. The settings action schedules that reindex explicitly.
+5. Start ElectrumX. It builds its index from the Namecoin chain via RPC, which takes several hours on commodity hardware; progress is reported phase-by-phase in the health check (see [Health Checks](#health-checks)).
 
 ---
 
@@ -88,7 +89,7 @@ The package does **not** mount the Namecoin Core data volume. ElectrumX talks to
 
 Configuration lives in `/data/electrumx/start9/electrumx.json` and is edited via Actions, not a single config screen:
 
-- **Namecoin Core Connection** — RPC user, password, host, port. Normally auto-populated by the dependency wiring; the action stays enabled for debugging.
+- **Namecoin Core Connection** — RPC user, password, host, port. Generated during dependency setup and registered by the Core credential task; the action stays enabled for debugging or custom connections.
 - **Performance Settings** — `CACHE_MB` (default 400) and `MAX_SESSIONS` (default 1000).
 - **Logging Settings** — `LOG_LEVEL` (debug / info / warning / error).
 - **Server Banner** — optional banner text + donation address advertised to connecting Electrum clients.
@@ -122,7 +123,7 @@ The local ElectrumX admin RPC (`rpc://0.0.0.0:8000`) is bound inside the contain
 | Regenerate SSL Certificate      | Maintenance   | Delete + regenerate the self-signed SSL/WSS cert                                 |
 | Name Lookup                     | Maintenance   | Resolve a Namecoin name (`d/wikileaks`, `id/alice`, …) via this server's TCP port |
 | Runtime Information             | (top-level)   | Flat `ActionResult` of version / heights / sync % / sessions / request count     |
-| Configure ElectrumX → Namecoin… | *(hidden)*    | Invoked by the namecoind dependency wiring to set RPC credentials                |
+| Configure ElectrumX → Namecoin… | *(hidden)*    | Legacy credential setter retained for compatibility; current init writes credentials directly |
 
 The **Runtime Information** action is deliberately flat (no nested groups). Rationale lifted from [namecoin-core-startos PR #7](https://github.com/Start9-Community/namecoin-core-startos/pull/7): the StartOS action-result modal collapses every nested `group`, so a deep tree hides the key numbers behind multiple closed accordions.
 
@@ -153,9 +154,9 @@ The Electrum protocol port (TCP 50001) is also probed by the daemon-readiness ch
 
 ## Dependencies
 
-- **`namecoind` ≥ 30.2.0.3:0** (hard dependency). ElectrumX needs a fully-synced, non-pruned Namecoin Core node with `txindex` enabled. The Namecoin Core package's "Other Settings" action exposes the `txindex` toggle.
+- **`namecoind` ≥ 32.1:0** (hard dependency), with its `namecoind` and `sync-progress` health checks required. ElectrumX needs a fully synced, non-pruned node with `txindex` enabled.
 
-The dependency wiring is expected to call our hidden `configure-dependent` action (with an RPC username + password minted by `namecoind`'s `generate-rpc-dependent` action) at install time so ElectrumX gets a dedicated rpcauth entry. If that wiring fails for any reason, the visible **Namecoin Core Connection** action lets the operator set credentials manually.
+Two dependency init handlers create critical tasks on Core. The **Other Settings** task accepts only `prune=0` and `txindex=true`, and Core's action schedules a reindex when pruning is disabled. The **Create RPC Credentials** task is prefilled with a random username/password generated and stored by ElectrumX. A temporary read-only mount checks Core's `namecoin.conf`; the task is cleared only when that username is actually registered. The visible **Namecoin Core Connection** action remains available for credential recovery or a custom connection.
 
 ---
 
@@ -182,7 +183,7 @@ See [`CONTRIBUTING.md`](./CONTRIBUTING.md), [`UPDATING.md`](./UPDATING.md), and 
 
 - Wrapper repo (this): `mstrofnone/namecoin-electrumx-startos-start9`. Future home: `Start9-Community/namecoin-electrumx-startos` (mirroring the `namecoin-core-startos` migration).
 - Daemon source: `mstrofnone/electrumx@fix/pin-websockets`.
-- Hard dependency: `namecoind` (the Start9-Community Namecoin Core package), version range `>=30.2.0.3:0`.
+- Hard dependency: `namecoind` (the Start9-Community Namecoin Core package), version range `>=32.1:0`.
 - All wrapper state lives in `/data/electrumx/start9/{store.json,electrumx.json}`. Config edits go through Actions; do not edit those files by hand inside the container.
 - Health-check polling cadence: 30 s steady state, 5 s during `starting`/`failure`.
 - Reindex is **destructive of the LevelDB but lossless of NMC funds** (ElectrumX doesn't hold keys).

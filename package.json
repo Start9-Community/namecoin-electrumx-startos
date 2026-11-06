@@ -1,7 +1,8 @@
 {
   "name": "namecoin-electrumx",
   "dependencies": {
-    "@start9labs/start-sdk": "3.1.1"
+    "@start9labs/start-sdk": "3.1.1",
+    "namecoin-core-startos": "github:Start9-Community/namecoin-core-startos#main"
   },
   "overrides": {
     "@start9labs/start-sdk": "$@start9labs/start-sdk"
