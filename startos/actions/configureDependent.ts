@@ -16,9 +16,7 @@ export const inputSpec = InputSpec.of({
     description: i18n(
       'The RPC username configured on the Namecoin Core service for this ElectrumX instance.',
     ),
-    disabled: i18n(
-      'These fields were provided by a task and cannot be edited',
-    ),
+    disabled: i18n('These fields were provided by a task and cannot be edited'),
     required: true,
     default: null,
     patterns: [
@@ -33,9 +31,7 @@ export const inputSpec = InputSpec.of({
     description: i18n(
       'The plaintext RPC password matching the rpcauth entry on the Namecoin Core service.',
     ),
-    disabled: i18n(
-      'These fields were provided by a task and cannot be edited',
-    ),
+    disabled: i18n('These fields were provided by a task and cannot be edited'),
     required: true,
     default: null,
     masked: true,

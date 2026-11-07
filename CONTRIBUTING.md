@@ -31,11 +31,13 @@ For a complete list of build options, see [Makefile](https://docs.start9.com/pac
 
 ## CI/CD
 
-Three workflows under `.github/workflows/` wrap reusable workflows in [`Start9Labs/shared-workflows`](https://github.com/Start9Labs/shared-workflows):
+Five workflows under `.github/workflows/` wrap reusable workflows in [`Start9Labs/start-technologies`](https://github.com/Start9Labs/start-technologies):
 
-- **`build.yml`** — on PR, builds the `.s9pk` and uploads per-arch artifacts for sideload testing.
+- **`build.yml`** — on PR, builds the `.s9pk` and uploads per-arch artifacts for sideload testing. PR builds do not receive `DEV_KEY` — a PR build doesn't publish, so it doesn't need the signing key.
+- **`pr-retarget.yml`** — rebuilds when a PR's base branch changes.
 - **`release.yml`** — on `v*` tag, builds per arch and publishes to the test registry.
 - **`tagAndRelease.yml`** — on push to `main`, tags `v<version>` and runs `release.yml`, skipping if already published.
+- **`syncNext.yml`** — carries every change that lands on `main` onto the paired `next` iteration branch (created on first run if absent).
 
 Promotion to `beta` and `prod` is a separate, manual step.
 

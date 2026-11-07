@@ -77,14 +77,12 @@ export const runtimeInfo = sdk.Action.withoutInput(
       copyable: false,
       masked: false,
       qr: false,
+      launchable: false,
     })
 
     // Flat layout — no nested groups. See header comment for why.
     const members: T.ActionResultMember[] = [
-      single(
-        i18n('ElectrumX Version'),
-        String(info.version ?? 'unknown'),
-      ),
+      single(i18n('ElectrumX Version'), String(info.version ?? 'unknown')),
       single(
         i18n('Daemon URL'),
         String(info.daemon ?? 'unknown'),

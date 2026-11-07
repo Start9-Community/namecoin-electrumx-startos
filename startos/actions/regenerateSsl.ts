@@ -38,7 +38,9 @@ export const regenerateSsl = sdk.Action.withoutInput(
     return {
       version: '1',
       title: i18n('Success'),
-      message: i18n('Existing certificate deleted. A new one will be generated on next start.'),
+      message: i18n(
+        'Existing certificate deleted. A new one will be generated on next start.',
+      ),
       result: null,
     }
   },
