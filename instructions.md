@@ -19,12 +19,36 @@ On first start, ElectrumX downloads every block from your Namecoin Core node ove
 - **Indexing blocks… M / N (X%)** — actively indexing. The percentage moves slowly during the first ~100k blocks but the absolute counter (`M`) keeps ticking so you can see real progress.
 - **Index fully synced** — caught up to Namecoin Core. Wallets can now resolve names and verify transactions.
 
+ElectrumX deliberately refuses to open client listeners (TCP / SSL / WS / WSS) until its initial synchronization to tip completes — it won't serve stale data. The four `electrum-*` Service Interfaces will not respond to wallet connections before then. The **Blockchain Sync** healthcheck polls separately, so its _Index fully synced_ display can lag the listeners slightly. This is normal.
+
 ## Connecting wallets
 
-### Electrum-NMC
+### Amethyst (Android, primary example)
+
+[Amethyst](https://github.com/vitorpamplona/amethyst) is a Nostr client for Android that uses ElectrumX to resolve `.bit` / `d/` / `id/` Namecoin names for NIP-05 verification, follow-import, and search. From the app's _Namecoin_ settings screen you can point it directly at _this_ server.
+
+1. In Amethyst go to **Settings → Namecoin**.
+2. Set **Resolution backend** to **ElectrumX (light client)**.
+3. (Optional) Toggle **Fall back to default public ElectrumX servers** off if you want lookups to fail closed when your own server is unreachable, rather than leaking to third-party operators.
+4. Under **Add ElectrumX server**, paste the TCP or SSL onion address copied from **Service Interfaces** on this StartOS service:
+
+   | Interface    | Port  | Suffix to add                 |
+   | ------------ | ----- | ----------------------------- |
+   | Electrum TCP | 50001 | `:50001:tcp`                  |
+   | Electrum SSL | 50002 | `:50002` (TLS is the default) |
+
+   Example: `xxxxxxxxxx.onion:50001:tcp` for the plain-TCP onion.
+
+   ⚠️ **Use a supported protocol.** Amethyst accepts `host:port` for TLS and `host:port:tcp` for plaintext TCP. It does not support WebSocket (`:ws`) or Secure WebSocket (`:wss`) endpoints; ports 50003 and 50004 are for clients with WS/WSS support. Do not omit `:tcp` on port 50001, or Amethyst will attempt TLS on the plaintext port.
+
+5. Tap **+ Add** then **Test Connection**. A green ✓ with a millisecond latency confirms the server is reachable.
+
+Onion lookups require Tor and the **Nostr Address Verification** option (**Force Tor when verifying NIP-05 addresses**) to be enabled; ElectrumX sockets follow Amethyst's NIP-05 Tor policy. With Amethyst's built-in Tor (Arti), no manual proxy configuration is needed.
+
+### Electrum-NMC (desktop)
 
 1. **Tools → Network → Server**.
-2. Uncheck *Select server automatically*.
+2. Uncheck _Select server automatically_.
 3. Enter the server address and port from **Service Interfaces**:
    - **Electrum TCP Interface** — port `50001`, plaintext. Use this for `.onion` / local connections.
    - **Electrum SSL Interface** — port `50002`, TLS. Use this from the open internet.
@@ -33,11 +57,18 @@ On first start, ElectrumX downloads every block from your Namecoin Core node ove
 
 ### Other Electrum-protocol clients
 
-Any wallet or tool that speaks Electrum and supports Namecoin can connect on any of the four ports above. The SSL/WSS cert is self-signed — clients that strictly verify TLS will need to import `/data/electrumx/ssl/server.crt` from the package volume.
+Any wallet or tool that speaks Electrum and supports Namecoin can connect on any of the four ports above. The SSL/WSS cert is self-signed — clients that strictly verify TLS will need to import `/data/electrumx/ssl/server.crt` from the package volume, or trust the cert on first use.
+
+## Quirks & Known Issues
+
+- **Self-signed SSL cert.** Ports 50002 (SSL) and 50004 (WSS) present a self-signed certificate by default. Use **Actions → Maintenance → Regenerate SSL Certificate** to rotate it; wallets that pinned the previous cert will need to re-trust the new one.
+- **ElectrumX hides until synced.** All four client listeners stay closed during initial sync. The `ready` healthcheck only tests whether the TCP listener is accepting connections; sync progress is published on the separate `sync-progress` healthcheck (LocalRPC port 8000), which works from the moment ElectrumX starts.
+- **WS / WSS used to be unreachable over Tor in early v0.4 builds.** The wrapper used to declare WS/WSS as `protocol: 'http'`, which triggered StartOS's auto-`addSsl` wrapping and prevented the lxcbr0 NAT from exposing the upstream ports to sibling containers (notably `tor`). Fixed from **1.4.3.1:5** onwards — bindings now use explicit `secure: { ssl: false | true }` so the upstream port is exposed directly. If you're on an older build and only `:50001/:50002` work over Tor, upgrade.
+- **Stale port-forward after package upgrade on older StartOS versions.** StartOS could leave one or more of `50001–50004` pinned to the previous container's IP after a package upgrade, causing connection timeouts or `I/O error: Socket is closed`. This was fixed upstream by [Start9Labs/start-technologies#3285](https://github.com/Start9Labs/start-technologies/pull/3285), merged June 2, 2026. Upgrade to a StartOS release containing that fix. On an affected older installation, run **start-cli server.restart** from the StartOS console to clear stale forwards. Not specific to this package — it affected any package whose container IP changed across upgrades.
 
 ## Configuration
 
-All settings are edited under **Actions** (grouped under *Configuration*) — there is no single config screen.
+All settings are edited under **Actions** (grouped under _Configuration_) — there is no single config screen.
 
 - **Performance Settings** — `Cache Size (MB)` and `Max Sessions`. The default 400 MB cache works well for steady-state operation; bump it to 1024–2048 MB to speed up the initial index if you have spare RAM. Do not exceed 60% of physical RAM.
 - **Logging Settings** — `debug` for troubleshooting; `info` for normal operation.
@@ -56,7 +87,7 @@ Wipes and regenerates the self-signed certificate used by the SSL and WSS transp
 
 ### Name Lookup
 
-Resolves a Namecoin name (`d/wikileaks`, `id/alice`, `dd/testls`, …) by talking the Electrum line protocol to *this* server — equivalent to a client calling `blockchain.name.get_value`. Useful as a sanity check that the public-facing protocol works, separate from `namecoin-cli name_show` (which goes through Namecoin Core's own JSON-RPC).
+Resolves a Namecoin name (`d/wikileaks`, `id/alice`, `dd/testls`, …) by talking the Electrum line protocol to _this_ server — equivalent to a client calling `blockchain.name.get_value`. Useful as a sanity check that the public-facing protocol works, separate from `namecoin-cli name_show` (which goes through Namecoin Core's own JSON-RPC).
 
 ### Runtime Information
 
@@ -64,7 +95,7 @@ A single click shows ElectrumX version, the daemon URL, index height vs daemon h
 
 ## Health Check
 
-The **Blockchain Sync** health check reports the four phases above with a 30-second refresh (5 seconds while starting / failing). It's wired to the same ElectrumX admin RPC the *Runtime Information* action uses.
+The **Blockchain Sync** health check reports the four phases above with a 30-second refresh (5 seconds while starting / failing). It's wired to the same ElectrumX admin RPC the _Runtime Information_ action uses.
 
 ## Backups
 
