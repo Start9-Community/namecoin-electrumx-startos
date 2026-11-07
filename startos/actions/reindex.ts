@@ -10,38 +10,14 @@ export const reindex = sdk.Action.withoutInput(
       'Delete the ElectrumX index and rebuild it from Namecoin Core',
     ),
     warning: i18n(
-      'This will delete the ElectrumX index database and rebuild it from the Namecoin Core node. The reindex process can take several hours. ElectrumX will be unavailable to clients during this process.',
+      'Rebuilding takes several hours, and ElectrumX serves no clients until it finishes.',
     ),
     allowedStatuses: 'any',
-    group: i18n('Maintenance'),
+    group: null,
     visibility: 'enabled',
   }),
   async ({ effects }) => {
-    await storeJson.merge(effects, { reindex: true, fullySynced: false })
-
-    const status = await sdk
-      .getStatus(effects, { packageId: 'namecoin-electrumx' })
-      .once()
-
-    if (status?.desired.main === 'running') {
-      await sdk.restart(effects)
-      return {
-        version: '1',
-        title: i18n('Success'),
-        message: i18n(
-          'Restarting ElectrumX to rebuild the index. This may take several hours.',
-        ),
-        result: null,
-      }
-    }
-
-    return {
-      version: '1',
-      title: i18n('Success'),
-      message: i18n(
-        'Reindex scheduled. Restart ElectrumX to begin rebuilding the index.',
-      ),
-      result: null,
-    }
+    await storeJson.merge(effects, { reindex: true })
+    return null
   },
 )

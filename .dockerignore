@@ -1,9 +1,7 @@
 .git
-.github
+.gitmodules
 node_modules
 javascript
+ncc-cache
 docker-images
 *.s9pk
-*.tar
-*.tar.gz
-.DS_Store
