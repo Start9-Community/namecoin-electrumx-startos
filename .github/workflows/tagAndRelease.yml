@@ -11,6 +11,9 @@ concurrency:
 
 jobs:
   tag:
+    # Publishing is opt-in. The reusable workflow requires a registry for its
+    # version check; without one, skip instead of failing every push to main.
+    if: vars.REFERENCE_REGISTRY != ''
     uses: Start9Labs/start-technologies/.github/workflows/tagAndRelease.yml@master
     with:
       REFERENCE_REGISTRY: ${{ vars.REFERENCE_REGISTRY }}
