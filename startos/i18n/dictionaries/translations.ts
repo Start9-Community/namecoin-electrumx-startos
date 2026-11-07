@@ -41,6 +41,9 @@ export default {
     36: 'Altura del índice',
     37: 'Altura de Namecoin Core',
     38: 'Construyendo el índice',
+    39: 'Éxito',
+    40: 'Reiniciando ElectrumX para reconstruir el índice',
+    41: 'ElectrumX reconstruirá su índice la próxima vez que se inicie',
   },
   de_DE: {
     0: 'Starte Namecoin ElectrumX!',
@@ -82,6 +85,9 @@ export default {
     36: 'Indexhöhe',
     37: 'Namecoin-Core-Höhe',
     38: 'Index wird aufgebaut',
+    39: 'Erfolg',
+    40: 'ElectrumX wird neu gestartet, um den Index neu aufzubauen',
+    41: 'ElectrumX baut seinen Index beim nächsten Start neu auf',
   },
   pl_PL: {
     0: 'Uruchamianie Namecoin ElectrumX!',
@@ -123,6 +129,9 @@ export default {
     36: 'Wysokość indeksu',
     37: 'Wysokość Namecoin Core',
     38: 'Budowanie indeksu',
+    39: 'Sukces',
+    40: 'Ponowne uruchamianie ElectrumX w celu odbudowania indeksu',
+    41: 'ElectrumX odbuduje indeks przy następnym uruchomieniu',
   },
   fr_FR: {
     0: 'Démarrage de Namecoin ElectrumX !',
@@ -164,5 +173,8 @@ export default {
     36: "Hauteur de l'index",
     37: 'Hauteur de Namecoin Core',
     38: "Construction de l'index",
+    39: 'Succès',
+    40: "Redémarrage d'ElectrumX pour reconstruire l'index",
+    41: 'ElectrumX reconstruira son index au prochain démarrage',
   },
 } satisfies Record<string, LangDict>

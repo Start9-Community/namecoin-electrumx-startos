@@ -15,7 +15,8 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
     protocol: null,
     addSsl: { preferredExternalPort: electrumSslPort, alpn: null },
     preferredExternalPort: electrumPort,
-    secure: null,
+    // Mark the base listener as intentional plaintext; addSsl still exposes TLS.
+    secure: { ssl: false },
   })
   const electrum = sdk.createInterface(effects, {
     id: 'electrum',
@@ -33,7 +34,8 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
     protocol: null,
     addSsl: { preferredExternalPort: wssPort, alpn: null },
     preferredExternalPort: wsPort,
-    secure: null,
+    // Mark the base listener as intentional plaintext; addSsl still exposes TLS.
+    secure: { ssl: false },
   })
   const websocket = sdk.createInterface(effects, {
     id: 'websocket',

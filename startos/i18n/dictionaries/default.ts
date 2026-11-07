@@ -40,6 +40,9 @@ const dict = {
   'Index Height': 36,
   'Namecoin Core Height': 37,
   'Building the index': 38,
+  Success: 39,
+  'Restarting ElectrumX to rebuild the index': 40,
+  'ElectrumX will rebuild its index the next time it starts': 41,
 } as const
 
 /**
