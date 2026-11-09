@@ -1,15 +1,19 @@
 import { actions } from '../actions'
 import { restoreInit } from '../backups'
 import { dependencies } from '../dependencies'
+import { storeJson } from '../fileModels/store.json'
 import { setInterfaces } from '../interfaces'
 import { sdk } from '../sdk'
 import { versionGraph } from '../versions'
-import { seedFiles } from './seedFiles'
+
+const seedStore = sdk.setupOnInit(async (effects, kind) => {
+  if (kind === 'install') await storeJson.merge(effects, {})
+})
 
 export const init = sdk.setupInit(
   restoreInit,
   versionGraph,
-  seedFiles,
+  seedStore,
   setInterfaces,
   actions,
   dependencies,
