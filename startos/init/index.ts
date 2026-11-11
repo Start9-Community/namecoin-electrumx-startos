@@ -6,8 +6,10 @@ import { setInterfaces } from '../interfaces'
 import { sdk } from '../sdk'
 import { versionGraph } from '../versions'
 
-const seedStore = sdk.setupOnInit(async (effects, kind) => {
-  if (kind === 'install') await storeJson.merge(effects, {})
+const seedStore = sdk.setupOnInit(async (effects) => {
+  // Updates and restores need the store too. Merge preserves migrated or
+  // restored values while supplying defaults for any missing fields.
+  await storeJson.merge(effects, {})
 })
 
 export const init = sdk.setupInit(
