@@ -71,10 +71,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
   const cookie = await FileHelper.string(
     `${await sub.rootfs}${namecoindDir}/.cookie`,
   )
-    .read(
-      (c) => c.trim(),
-      (prev, next) => next === null || prev === next,
-    )
+    .read((c) => c.trim())
     .const(effects)
 
   if (!cookie) return waitForNamecoind()
