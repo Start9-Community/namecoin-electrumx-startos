@@ -34,18 +34,18 @@ const retiredHostIds = [
 ] as const
 
 export const current = VersionInfo.of({
-  version: '1.16.0:1',
+  version: '1.20.1:0',
   releaseNotes: {
     en_US:
-      'Fix upgrades and restores by initializing the settings store and preserving legacy settings. Restart ElectrumX when Namecoin Core stops or rotates its RPC cookie. Legacy Electrum hosts are retired; custom addresses on them must be configured again on the main host.',
+      'Update ElectrumX to 1.20.1, retaining Namecoin name-index and name-proof support and including a fix for disconnected sessions during IP grouping.',
     es_ES:
-      'Corrige actualizaciones y restauraciones inicializando la configuración y conservando los ajustes anteriores. Reinicia ElectrumX cuando Namecoin Core se detiene o cambia su cookie RPC. Los hosts Electrum anteriores se retiran; vuelva a configurar sus direcciones personalizadas en main.',
+      'Actualiza ElectrumX a 1.20.1, conservando la compatibilidad con índices y pruebas de nombres de Namecoin e incluyendo una corrección para sesiones desconectadas durante la agrupación por IP.',
     de_DE:
-      'Behebt Upgrades und Wiederherstellungen durch Initialisierung und Übernahme bisheriger Einstellungen. Startet ElectrumX neu, wenn Namecoin Core stoppt oder sein RPC-Cookie wechselt. Alte Electrum-Hosts werden entfernt; eigene Adressen müssen auf main neu konfiguriert werden.',
+      'Aktualisiert ElectrumX auf 1.20.1, behält Namecoin-Namensindizes und -nachweise bei und behebt ein Problem mit getrennten Sitzungen bei der IP-Gruppierung.',
     pl_PL:
-      'Naprawia aktualizacje i przywracanie przez inicjalizację magazynu i zachowanie poprzednich ustawień. Ponownie uruchamia ElectrumX po zatrzymaniu Namecoin Core lub zmianie jego cookie RPC. Stare hosty Electrum są usuwane; skonfiguruj ponownie ich własne adresy na main.',
+      'Aktualizuje ElectrumX do wersji 1.20.1, zachowując obsługę indeksów i dowodów nazw Namecoin oraz poprawiając obsługę rozłączonych sesji podczas grupowania według adresów IP.',
     fr_FR:
-      'Corrige les mises à niveau et restaurations en initialisant le stockage et en conservant les anciens réglages. Redémarre ElectrumX quand Namecoin Core s’arrête ou change son cookie RPC. Les anciens hôtes Electrum sont retirés ; reconfigurez leurs adresses personnalisées sur main.',
+      'Met à jour ElectrumX vers 1.20.1, conserve la prise en charge des index et preuves de noms Namecoin et corrige la gestion des sessions déconnectées lors du regroupement par IP.',
   },
   migrations: {
     up: async ({ effects }) => {

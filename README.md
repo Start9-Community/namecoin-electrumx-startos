@@ -32,7 +32,7 @@
 
 ## Image and Container Runtime
 
-The image is built from source: the `electrumx/` git submodule (Namecoin's `protocol-1.4.3-v1` line) is installed with pip onto `python:3.11-slim-bookworm`, with the patches in `patches/` applied first.
+The image is built from source: the `electrumx/` git submodule pins `mstrofnone/electrumx` at the production ElectrumX 1.20.1 revision and is installed with pip onto `python:3.11-slim-bookworm`. Namecoin name-index and name-proof RPC support are retained.
 
 | Property      | Value                                                   |
 | ------------- | ------------------------------------------------------- |
@@ -40,8 +40,6 @@ The image is built from source: the `electrumx/` git submodule (Namecoin's `prot
 | Architectures | x86_64, aarch64                                         |
 | Entrypoint    | `electrumx_server`, configured entirely by environment  |
 | Subcontainer  | `electrumx` — the server process                        |
-
-The one carried patch pins `websockets` below 14; [`patches/README.md`](patches/README.md) says what retires it.
 
 ## Volume and Data Layout
 
@@ -141,7 +139,7 @@ Both volumes are copied wholesale, with `db/` excluded: the index rebuilds from 
 
 ```yaml
 package_id: namecoin-electrumx
-image: built from the electrumx/ submodule (namecoin/electrumx)
+image: built from the electrumx/ submodule (mstrofnone/electrumx)
 architectures: [x86_64, aarch64]
 subcontainers: [electrumx]
 volumes:
