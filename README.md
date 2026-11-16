@@ -32,7 +32,7 @@
 
 ## Image and Container Runtime
 
-The image is built from source: the `electrumx/` git submodule pins `mstrofnone/electrumx` at the production ElectrumX 1.20.1 revision and is installed with pip onto `python:3.11-slim-bookworm`. Namecoin name-index and name-proof RPC support are retained.
+The image is built from source: the `electrumx/` git submodule pins `mstrofnone/electrumx` and is installed with pip onto a Debian-based Python image. Namecoin name-index and name-proof RPC support are retained. A carried patch preserves variable-length Namecoin header batches; [patches/README.md](patches/README.md) states its retirement condition.
 
 | Property      | Value                                                   |
 | ------------- | ------------------------------------------------------- |
