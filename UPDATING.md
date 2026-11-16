@@ -1,25 +1,25 @@
 # Updating the upstream version
 
-ElectrumX is built from source via the `electrumx/` git submodule (see `.gitmodules`), which tracks the `master` branch of `mstrofnone/electrumx`. The submodule commit is the version pin; the version itself is `__version__` in `electrumx/src/electrumx/__init__.py`.
+ElectrumX is built from source via the `electrumx/` git submodule (see `.gitmodules`), pinned to a release tag of `spesmilo/electrumx` on its 1.x line, the `v1.x` branch; upstream's `master` carries 2.x. The submodule commit is the version pin; the version itself is `__version__` in `electrumx/src/electrumx/__init__.py`.
 
 ## Determining the upstream version
 
-- **electrumx** (`mstrofnone/electrumx`, https://github.com/mstrofnone/electrumx)
+- **electrumx** (`spesmilo/electrumx`, https://github.com/spesmilo/electrumx) — upstream publishes tags, not GitHub releases:
   ```bash
-  git ls-remote https://github.com/mstrofnone/electrumx.git refs/heads/master
+  git ls-remote --tags --sort=-v:refname https://github.com/spesmilo/electrumx.git 'refs/tags/1.*'
   ```
-  Compare against the commit checked out in the submodule:
+  Compare against the tag checked out in the submodule:
   ```bash
-  git -C electrumx rev-parse HEAD
+  git -C electrumx describe --tags --exact-match HEAD
   ```
 
 ## Applying the bump
 
-- **electrumx** — advance the submodule and stage the gitlink:
+- **electrumx** — advance the submodule to the new tag and stage the gitlink:
   ```bash
   git submodule sync -- electrumx
-  git -C electrumx fetch origin master
-  git -C electrumx checkout FETCH_HEAD
+  git -C electrumx fetch --tags origin
+  git -C electrumx checkout <new tag>
   git add electrumx
   ```
   The package version follows `__version__` in `electrumx/src/electrumx/__init__.py`.

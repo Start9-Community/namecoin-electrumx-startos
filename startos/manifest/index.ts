@@ -7,7 +7,7 @@ export const manifest = setupManifest({
   license: 'MIT',
   donationUrl: 'https://www.namecoin.org/donate/',
   packageRepo: 'https://github.com/Start9-Community/namecoin-electrumx-startos',
-  upstreamRepo: 'https://github.com/mstrofnone/electrumx',
+  upstreamRepo: 'https://github.com/spesmilo/electrumx',
   marketingUrl: 'https://www.namecoin.org/',
   description: { short, long },
   volumes: ['main', 'startos'],

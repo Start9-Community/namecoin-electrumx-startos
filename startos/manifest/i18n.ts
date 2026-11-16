@@ -13,15 +13,15 @@ export const short = {
 
 export const long = {
   en_US:
-    'Namecoin ElectrumX is the Namecoin fork of ElectrumX, an Electrum-protocol server. It indexes your Namecoin Core node so Electrum-NMC wallets and other light clients can resolve names and verify transactions without a full node of their own, over TCP, SSL and WebSocket.',
+    'Namecoin ElectrumX runs ElectrumX, an Electrum-protocol server, for Namecoin. It indexes your Namecoin Core node so Electrum-NMC wallets and other light clients can resolve names and verify transactions without a full node of their own, over TCP, SSL and WebSocket.',
   es_ES:
-    'Namecoin ElectrumX es la bifurcación de ElectrumX de Namecoin, un servidor del protocolo Electrum. Indexa tu nodo Namecoin Core para que las carteras Electrum-NMC y otros clientes ligeros puedan resolver nombres y verificar transacciones sin un nodo completo propio, mediante TCP, SSL y WebSocket.',
+    'Namecoin ElectrumX ejecuta ElectrumX, un servidor del protocolo Electrum, para Namecoin. Indexa tu nodo Namecoin Core para que las carteras Electrum-NMC y otros clientes ligeros puedan resolver nombres y verificar transacciones sin un nodo completo propio, mediante TCP, SSL y WebSocket.',
   de_DE:
-    'Namecoin ElectrumX ist der Namecoin-Fork von ElectrumX, einem Server für das Electrum-Protokoll. Er indiziert deinen Namecoin-Core-Node, damit Electrum-NMC-Wallets und andere Light-Clients Namen auflösen und Transaktionen verifizieren können, ohne selbst einen Full Node zu betreiben – über TCP, SSL und WebSocket.',
+    'Namecoin ElectrumX betreibt ElectrumX, einen Server für das Electrum-Protokoll, für Namecoin. Er indiziert deinen Namecoin-Core-Node, damit Electrum-NMC-Wallets und andere Light-Clients Namen auflösen und Transaktionen verifizieren können, ohne selbst einen Full Node zu betreiben – über TCP, SSL und WebSocket.',
   pl_PL:
-    'Namecoin ElectrumX to fork ElectrumX od Namecoina, serwer protokołu Electrum. Indeksuje Twój węzeł Namecoin Core, dzięki czemu portfele Electrum-NMC i inni lekcy klienci mogą rozwiązywać nazwy i weryfikować transakcje bez własnego pełnego węzła, przez TCP, SSL i WebSocket.',
+    'Namecoin ElectrumX uruchamia ElectrumX, serwer protokołu Electrum, dla Namecoina. Indeksuje Twój węzeł Namecoin Core, dzięki czemu portfele Electrum-NMC i inni lekcy klienci mogą rozwiązywać nazwy i weryfikować transakcje bez własnego pełnego węzła, przez TCP, SSL i WebSocket.',
   fr_FR:
-    "Namecoin ElectrumX est le fork Namecoin d'ElectrumX, un serveur du protocole Electrum. Il indexe votre nœud Namecoin Core afin que les portefeuilles Electrum-NMC et d'autres clients légers puissent résoudre des noms et vérifier des transactions sans nœud complet, via TCP, SSL et WebSocket.",
+    "Namecoin ElectrumX exécute ElectrumX, un serveur du protocole Electrum, pour Namecoin. Il indexe votre nœud Namecoin Core afin que les portefeuilles Electrum-NMC et d'autres clients légers puissent résoudre des noms et vérifier des transactions sans nœud complet, via TCP, SSL et WebSocket.",
 }
 
 export const namecoindDescription = {

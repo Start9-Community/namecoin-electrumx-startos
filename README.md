@@ -5,11 +5,11 @@
 # Namecoin ElectrumX on StartOS
 
 > Everything not listed in this document should behave the same as upstream
-> Namecoin ElectrumX. If a feature, setting, or behavior is not mentioned here,
+> ElectrumX. If a feature, setting, or behavior is not mentioned here,
 > the upstream documentation is accurate and fully applicable — see the
 > Documentation section of `instructions.md` for links.
 
-[Namecoin ElectrumX](https://github.com/namecoin/electrumx) is Namecoin's fork of ElectrumX, an Electrum-protocol server that indexes a Namecoin Core node — names included — and serves it to light wallets. This package runs it against the Namecoin Core service on the same server.
+[ElectrumX](https://github.com/spesmilo/electrumx) is an Electrum-protocol server; its Namecoin support indexes a Namecoin Core node — names included — and serves it to light wallets. This package runs it against the Namecoin Core service on the same server.
 
 ---
 
@@ -32,7 +32,7 @@
 
 ## Image and Container Runtime
 
-The image is built from source: the `electrumx/` git submodule pins `mstrofnone/electrumx` and is installed with pip onto a Debian-based Python image. Namecoin name-index and name-proof RPC support are retained. A carried patch preserves variable-length Namecoin header batches; [patches/README.md](patches/README.md) states its retirement condition.
+The image is built from source: the `electrumx/` git submodule pins a 1.x release of `spesmilo/electrumx`, which carries Namecoin's name index and name-proof RPC, and is installed with pip onto a Debian-based Python image with the patches in `patches/` applied first. [patches/README.md](patches/README.md) says what each patch fixes and what retires it.
 
 | Property      | Value                                                   |
 | ------------- | ------------------------------------------------------- |
@@ -139,7 +139,7 @@ Both volumes are copied wholesale, with `db/` excluded: the index rebuilds from 
 
 ```yaml
 package_id: namecoin-electrumx
-image: built from the electrumx/ submodule (mstrofnone/electrumx)
+image: built from the electrumx/ submodule (spesmilo/electrumx)
 architectures: [x86_64, aarch64]
 subcontainers: [electrumx]
 volumes:
