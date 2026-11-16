@@ -1,7 +1,7 @@
 ## Documentation
 
-- [Electrum-NMC](https://www.namecoin.org/docs/electrum-nmc/*) — the Namecoin light wallet that connects to this server
-- [ElectrumX protocol methods](https://github.com/namecoin/electrumx/blob/protocol-1.4.3-v1/docs/protocol-methods.rst) — the Electrum protocol this server speaks, including Namecoin's name methods
+- [Electrum-NMC](https://www.namecoin.org/docs/electrum-nmc/) — the Namecoin light wallet that connects to this server
+- [Electrum protocol](https://electrum-protocol.readthedocs.io/) — the protocol this server speaks; Namecoin's name methods are under [altcoin methods](https://electrum-protocol.readthedocs.io/en/latest/protocol-methods-altcoins.html)
 
 ## What it gives you on StartOS
 
