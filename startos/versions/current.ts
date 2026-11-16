@@ -1,18 +1,18 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '1.20.1:0',
+  version: '1.20.1:1',
   releaseNotes: {
     en_US:
-      'Update ElectrumX to 1.20.1, retaining Namecoin name-index and name-proof support and including a fix for disconnected sessions during IP grouping. [Full upstream changes](https://github.com/spesmilo/electrumx/compare/714058794a69ec56563009509a1d6df54ff482f2...1.20.1).',
+      'Fix intermittent shutdown hangs by propagating task cancellation during peer verification instead of retrying peer connections. Existing disconnected-session handling is preserved.',
     es_ES:
-      'Actualiza ElectrumX a 1.20.1, conservando la compatibilidad con índices y pruebas de nombres de Namecoin e incluyendo una corrección para sesiones desconectadas durante la agrupación por IP. [Todos los cambios de upstream](https://github.com/spesmilo/electrumx/compare/714058794a69ec56563009509a1d6df54ff482f2...1.20.1).',
+      'Corrige bloqueos intermitentes al apagar propagando la cancelación de tareas durante la verificación de pares en lugar de reintentar conexiones. Se mantiene el manejo de sesiones desconectadas.',
     de_DE:
-      'Aktualisiert ElectrumX auf 1.20.1, behält Namecoin-Namensindizes und -nachweise bei und behebt ein Problem mit getrennten Sitzungen bei der IP-Gruppierung. [Alle Upstream-Änderungen](https://github.com/spesmilo/electrumx/compare/714058794a69ec56563009509a1d6df54ff482f2...1.20.1).',
+      'Behebt gelegentliche Hänger beim Herunterfahren, indem Task-Abbrüche bei der Peer-Prüfung weitergegeben werden, statt Peer-Verbindungen erneut zu versuchen. Die Behandlung getrennter Sitzungen bleibt erhalten.',
     pl_PL:
-      'Aktualizuje ElectrumX do wersji 1.20.1, zachowując obsługę indeksów i dowodów nazw Namecoin oraz poprawiając obsługę rozłączonych sesji podczas grupowania według adresów IP. [Wszystkie zmiany upstream](https://github.com/spesmilo/electrumx/compare/714058794a69ec56563009509a1d6df54ff482f2...1.20.1).',
+      'Naprawia sporadyczne zawieszanie się podczas zamykania przez propagowanie anulowania zadania podczas weryfikacji peerów zamiast ponawiania połączeń. Obsługa rozłączonych sesji pozostaje bez zmian.',
     fr_FR:
-      'Met à jour ElectrumX vers 1.20.1, conserve la prise en charge des index et preuves de noms Namecoin et corrige la gestion des sessions déconnectées lors du regroupement par IP. [Tous les changements en amont](https://github.com/spesmilo/electrumx/compare/714058794a69ec56563009509a1d6df54ff482f2...1.20.1).',
+      'Corrige les blocages intermittents à l’arrêt en propageant l’annulation des tâches pendant la vérification des pairs au lieu de réessayer les connexions. La gestion des sessions déconnectées est conservée.',
   },
   migrations: {
     up: async () => {},

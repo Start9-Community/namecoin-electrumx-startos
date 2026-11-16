@@ -28,3 +28,14 @@ The patch makes header RPCs and block hashes share `DB.read_headers_array()`, wh
 header lengths at the requested heights. It adds upstream regression cases for genesis
 and nonzero starts, ranges reaching past the indexed tip, empty ranges, and protocol 1.4.3
 and 1.6 responses with and without checkpoints. Its test hunks extend the test file 0001 adds.
+
+## 0003 — propagate peer-verification shutdown cancellation
+
+**Retire when:** the pinned submodule distinguishes task cancellation from aiorpcX's
+closed-session `CancelledError` during `server.version` and `server.add_peer` requests.
+
+ElectrumX 1.20.1 converts both exceptions to `BadPeerError`. During shutdown this can send
+the peer monitor back into ordinary connection retries and prevent the service task group
+from exiting. The patch propagates actual task cancellation while retaining the historical
+bad-peer result for locally closed RPC sessions. Regression coverage exercises both critical
+requests and both cancellation origins on Python 3.10 and 3.11.
