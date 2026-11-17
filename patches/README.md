@@ -36,6 +36,7 @@ closed-session `CancelledError` during `server.version` and `server.add_peer` re
 
 ElectrumX 1.20.1 converts both exceptions to `BadPeerError`. During shutdown this can send
 the peer monitor back into ordinary connection retries and prevent the service task group
-from exiting. The patch propagates actual task cancellation while retaining the historical
-bad-peer result for locally closed RPC sessions. Regression coverage exercises both critical
-requests and both cancellation origins on Python 3.10 and 3.11.
+from exiting. The patch propagates caller cancellation while retaining the historical
+bad-peer result for locally closed RPC sessions. Its carried regression cases cover both
+critical requests, expired peer-retry timeouts, cancellation during session closure, and
+request cleanup.
