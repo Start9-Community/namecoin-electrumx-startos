@@ -2,6 +2,7 @@ import { FileHelper } from '@start9labs/start-sdk'
 import type { manifest as namecoindManifest } from 'namecoin-core-startos/startos/manifest'
 import { rpcCookieName, rpcVolumeId } from 'namecoin-core-startos/startos/utils'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
+import { dependencies } from './dependencies'
 import { storeJson } from './fileModels/store.json'
 import { i18n } from './i18n'
 import { sdk } from './sdk'
@@ -31,6 +32,38 @@ export const main = sdk.setupMain(async ({ effects }) => {
 
   if (store.banner) await writeFile(bannerFile, store.banner + '\n')
   else await rm(bannerFile, { force: true })
+
+  // Core before 32.1:3 has no `public` volume, so mounting it would fail.
+  // Refuse until it is updated, then restart into the server.
+  const coreTooOld = async () => {
+    const check = await dependencies.check(effects, ['namecoind'])
+    return (
+      check.installedSatisfied('namecoind') &&
+      !check.installedVersionSatisfied('namecoind')
+    )
+  }
+  if (await coreTooOld()) {
+    return sdk.Daemons.of(effects).addHealthCheck('namecoind', {
+      ready: {
+        display: i18n('Namecoin Core'),
+        gracePeriod: 0,
+        trigger: sdk.trigger.cooldownTrigger(30_000),
+        fn: async () => {
+          if (await coreTooOld()) {
+            return {
+              result: 'failure',
+              message: i18n(
+                'ElectrumX needs Namecoin Core 32.1:3 or later, which publishes its RPC cookie for ElectrumX. Update Namecoin Core.',
+              ),
+            }
+          }
+          await sdk.restart(effects)
+          return { result: 'success', message: null }
+        },
+      },
+      requires: [],
+    })
+  }
 
   const sub = sdk.SubContainer.of(
     effects,

@@ -41,6 +41,7 @@ export default {
     36: 'Altura del índice',
     37: 'Altura de Namecoin Core',
     38: 'Construyendo el índice',
+    39: 'ElectrumX necesita Namecoin Core 32.1:3 o posterior, que publica su cookie RPC para ElectrumX. Actualice Namecoin Core.',
   },
   de_DE: {
     0: 'Starte Namecoin ElectrumX!',
@@ -82,6 +83,7 @@ export default {
     36: 'Indexhöhe',
     37: 'Namecoin-Core-Höhe',
     38: 'Index wird aufgebaut',
+    39: 'ElectrumX benötigt Namecoin Core 32.1:3 oder neuer, das sein RPC-Cookie für ElectrumX bereitstellt. Aktualisieren Sie Namecoin Core.',
   },
   pl_PL: {
     0: 'Uruchamianie Namecoin ElectrumX!',
@@ -123,6 +125,7 @@ export default {
     36: 'Wysokość indeksu',
     37: 'Wysokość Namecoin Core',
     38: 'Budowanie indeksu',
+    39: 'ElectrumX wymaga Namecoin Core 32.1:3 lub nowszego, który udostępnia swoje cookie RPC dla ElectrumX. Zaktualizuj Namecoin Core.',
   },
   fr_FR: {
     0: 'Démarrage de Namecoin ElectrumX !',
@@ -164,5 +167,6 @@ export default {
     36: "Hauteur de l'index",
     37: 'Hauteur de Namecoin Core',
     38: "Construction de l'index",
+    39: 'ElectrumX nécessite Namecoin Core 32.1:3 ou ultérieur, qui publie son cookie RPC pour ElectrumX. Mettez à jour Namecoin Core.',
   },
 } satisfies Record<string, LangDict>
