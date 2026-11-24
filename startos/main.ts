@@ -1,6 +1,4 @@
 import { FileHelper } from '@start9labs/start-sdk'
-import type { manifest as namecoindManifest } from 'namecoin-core-startos/startos/manifest'
-import { rpcCookieName, rpcVolumeId } from 'namecoin-core-startos/startos/utils'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { dependencies } from './dependencies'
 import { storeJson } from './fileModels/store.json'
@@ -75,9 +73,11 @@ export const main = sdk.setupMain(async ({ effects }) => {
         mountpoint: dataDir,
         readonly: false,
       })
-      .mountDependency<typeof namecoindManifest>({
+      // 'public' and '.cookie' mirror namecoin-core-startos's rpcVolumeId and
+      // rpcCookieName; the >=32.1:3 floor guarantees Core publishes them.
+      .mountDependency({
         dependencyId: 'namecoind',
-        volumeId: rpcVolumeId,
+        volumeId: 'public',
         subpath: null,
         mountpoint: namecoindDir,
         readonly: true,
@@ -103,7 +103,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
 
   // Namecoin Core republishes its cookie on every start; an absent one means it is down.
   const cookie = await FileHelper.string(
-    `${await sub.rootfs}${namecoindDir}/${rpcCookieName}`,
+    `${await sub.rootfs}${namecoindDir}/.cookie`,
   )
     .read((c) => c.trim())
     .const(effects)
