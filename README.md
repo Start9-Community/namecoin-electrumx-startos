@@ -89,7 +89,7 @@ ElectrumX opens these ports only once its index has caught up with Namecoin Core
 
 Install raises a critical task on Namecoin Core. Until it is run, ElectrumX cannot start. Once Core runs, ElectrumX indexes the whole chain from genesis, which takes hours, and opens its client ports when it reaches Core's tip.
 
-If ElectrumX starts while Core is stopped, it shows a single **Namecoin Core** check waiting on Core, then restarts into the server once Core's cookie appears. If the installed Core is older than 32.1:3, which first publishes the cookie on its `public` volume, the same check fails with a message to update Core instead; it re-checks every 30 seconds and restarts ElectrumX once Core has been updated.
+If ElectrumX starts while Core is stopped, it shows a single **Namecoin Core** check waiting on Core, then restarts into the server once Core's cookie appears.
 
 ## Actions
 
