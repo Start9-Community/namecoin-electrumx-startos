@@ -50,7 +50,7 @@ The package has two volumes: the ElectrumX data, and a StartOS-only volume holdi
 | `main`    | `/data`     | `db/` (the LevelDB index), `banner.txt` (when a banner is set) |
 | `startos` | none        | `store.json` — the package's settings                          |
 
-Namecoin Core's `main` volume is mounted read-only at `/mnt/namecoind`, for its RPC cookie.
+Namecoin Core's `public` volume is mounted read-only at `/mnt/namecoind`, for its RPC cookie. It holds nothing else; Core's data directory and wallet are not mounted.
 
 ## File Models
 
@@ -60,15 +60,15 @@ ElectrumX reads no configuration file; the package passes everything as environm
 
 `banner.txt` on `main` is rewritten from `store.json` on every start, and removed when the banner is empty, so a hand edit is lost.
 
-The environment is `COIN=Namecoin`, `NET=mainnet`, `DB_DIRECTORY`, `DAEMON_URL` (Namecoin Core's bridge address with its cookie credentials), `SERVICES`, `ALLOW_ROOT`, `CACHE_MB`, `MAX_SESSIONS`, `LOG_LEVEL`, and `BANNER_FILE` / `DONATION_ADDRESS` when set.
+The environment is `COIN=Namecoin`, `NET=mainnet`, `DB_DIRECTORY`, `DAEMON_URL` (Namecoin Core's bridge address with its cookie credentials), `SERVICES`, `ALLOW_ROOT`, `PEER_DISCOVERY=off`, `CACHE_MB`, `MAX_SESSIONS`, `LOG_LEVEL`, and `BANNER_FILE` / `DONATION_ADDRESS` when set.
 
 ## Dependencies
 
 ElectrumX needs one other service.
 
-| Dependency    | Required | Health checks | Mounted volume                        | Why                                        |
-| ------------- | -------- | ------------- | ------------------------------------- | ------------------------------------------ |
-| Namecoin Core | yes      | `namecoind`   | `main` at `/mnt/namecoind`, read-only | the chain ElectrumX indexes, over JSON-RPC |
+| Dependency    | Required | Health checks | Mounted volume                          | Why                                        |
+| ------------- | -------- | ------------- | --------------------------------------- | ------------------------------------------ |
+| Namecoin Core | yes      | `namecoind`   | `public` at `/mnt/namecoind`, read-only | the chain ElectrumX indexes, over JSON-RPC |
 
 ElectrumX authenticates with Core's RPC cookie, so it registers no RPC user. Core writes a new cookie on every start, and ElectrumX restarts to pick it up. Core must be archival with `txindex` on (see [Tasks](#tasks)).
 
@@ -89,7 +89,7 @@ ElectrumX opens these ports only once its index has caught up with Namecoin Core
 
 Install raises a critical task on Namecoin Core. Until it is run, ElectrumX cannot start. Once Core runs, ElectrumX indexes the whole chain from genesis, which takes hours, and opens its client ports when it reaches Core's tip.
 
-If ElectrumX starts while Core is stopped, it shows a single **Namecoin Core** check waiting on Core, then restarts into the server once Core's cookie appears.
+If ElectrumX starts while Core is stopped, it shows a single **Namecoin Core** check waiting on Core, then restarts into the server once Core's cookie appears. If the installed Core is older than 32.1:3, which first publishes the cookie on its `public` volume, the same check fails with a message to update Core instead; it re-checks every 30 seconds and restarts ElectrumX once Core has been updated.
 
 ## Actions
 
@@ -130,7 +130,7 @@ Both volumes are copied wholesale, with `db/` excluded: the index rebuilds from 
 1. Mainnet only.
 2. Plaintext Electrum and WebSocket are reachable only from other services on the server; clients elsewhere use the TLS ports, which carry the StartOS certificate.
 3. ElectrumX's own `ssl://` and `wss://` listeners and certificate are not used; StartOS provides TLS.
-4. The server does not announce itself to the Electrum peer network (`REPORT_SERVICES` is unset); it still discovers peers.
+4. The server takes no part in the Electrum peer network: it does not announce itself (`REPORT_SERVICES` is unset) and does not discover or connect to other servers (`PEER_DISCOVERY=off`). A client asking for peers gets an empty list.
 5. ElectrumX runs as root in its container (`ALLOW_ROOT`).
 
 ---
@@ -154,6 +154,7 @@ startos_managed_env_vars:
   - DAEMON_URL
   - SERVICES
   - ALLOW_ROOT
+  - PEER_DISCOVERY
   - CACHE_MB
   - MAX_SESSIONS
   - LOG_LEVEL

@@ -1,6 +1,6 @@
 import { FileHelper } from '@start9labs/start-sdk'
-import type { manifest as namecoindManifest } from 'namecoin-core-startos/startos/manifest'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
+import { dependencies } from './dependencies'
 import { storeJson } from './fileModels/store.json'
 import { i18n } from './i18n'
 import { sdk } from './sdk'
@@ -31,6 +31,38 @@ export const main = sdk.setupMain(async ({ effects }) => {
   if (store.banner) await writeFile(bannerFile, store.banner + '\n')
   else await rm(bannerFile, { force: true })
 
+  // Core before 32.1:3 has no `public` volume, so mounting it would fail.
+  // Refuse until it is updated, then restart into the server.
+  const coreTooOld = async () => {
+    const check = await dependencies.check(effects, ['namecoind'])
+    return (
+      check.installedSatisfied('namecoind') &&
+      !check.installedVersionSatisfied('namecoind')
+    )
+  }
+  if (await coreTooOld()) {
+    return sdk.Daemons.of(effects).addHealthCheck('namecoind', {
+      ready: {
+        display: i18n('Namecoin Core'),
+        gracePeriod: 0,
+        trigger: sdk.trigger.cooldownTrigger(30_000),
+        fn: async () => {
+          if (await coreTooOld()) {
+            return {
+              result: 'failure',
+              message: i18n(
+                'ElectrumX needs Namecoin Core 32.1:3 or later, which publishes its RPC cookie for ElectrumX. Update Namecoin Core.',
+              ),
+            }
+          }
+          await sdk.restart(effects)
+          return { result: 'success', message: null }
+        },
+      },
+      requires: [],
+    })
+  }
+
   const sub = sdk.SubContainer.of(
     effects,
     { imageId: 'namecoin-electrumx' },
@@ -41,9 +73,11 @@ export const main = sdk.setupMain(async ({ effects }) => {
         mountpoint: dataDir,
         readonly: false,
       })
-      .mountDependency<typeof namecoindManifest>({
+      // 'public' and '.cookie' mirror namecoin-core-startos's rpcVolumeId and
+      // rpcCookieName; the >=32.1:3 floor guarantees Core publishes them.
+      .mountDependency({
         dependencyId: 'namecoind',
-        volumeId: 'main',
+        volumeId: 'public',
         subpath: null,
         mountpoint: namecoindDir,
         readonly: true,
@@ -67,7 +101,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
   const rpc = await namecoindRpc(effects)
   if (!rpc) return waitForNamecoind()
 
-  // Namecoin Core rewrites its cookie on every start; an absent one means it is down.
+  // Namecoin Core republishes its cookie on every start; an absent one means it is down.
   const cookie = await FileHelper.string(
     `${await sub.rootfs}${namecoindDir}/.cookie`,
   )
@@ -88,6 +122,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
           DAEMON_URL: `http://${cookie}@${rpc}/`,
           SERVICES: `tcp://:${electrumPort},ws://:${wsPort},rpc://127.0.0.1:${adminRpcPort}`,
           ALLOW_ROOT: '1',
+          PEER_DISCOVERY: 'off',
           CACHE_MB: String(store.cacheMb),
           MAX_SESSIONS: String(store.maxSessions),
           LOG_LEVEL: store.logLevel,

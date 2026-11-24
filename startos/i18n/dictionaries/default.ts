@@ -40,6 +40,7 @@ const dict = {
   'Index Height': 36,
   'Namecoin Core Height': 37,
   'Building the index': 38,
+  'ElectrumX needs Namecoin Core 32.1:3 or later, which publishes its RPC cookie for ElectrumX. Update Namecoin Core.': 39,
 } as const
 
 /**
