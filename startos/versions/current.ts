@@ -1,18 +1,18 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '1.20.1:1',
+  version: '1.20.1:2',
   releaseNotes: {
     en_US:
-      'Fix intermittent shutdown hangs by propagating task cancellation during peer verification instead of retrying peer connections. Existing disconnected-session handling is preserved.',
+      'ElectrumX can no longer read Namecoin Core’s data directory or wallet; it now sees only Core’s RPC cookie. Requires Namecoin Core 32.1:3 or later. ElectrumX no longer discovers or connects to other Electrum servers.',
     es_ES:
-      'Corrige bloqueos intermitentes al apagar propagando la cancelación de tareas durante la verificación de pares en lugar de reintentar conexiones. Se mantiene el manejo de sesiones desconectadas.',
+      'ElectrumX ya no puede leer el directorio de datos ni la billetera de Namecoin Core; ahora solo ve la cookie RPC de Core. Requiere Namecoin Core 32.1:3 o posterior. ElectrumX ya no descubre otros servidores Electrum ni se conecta a ellos.',
     de_DE:
-      'Behebt gelegentliche Hänger beim Herunterfahren, indem Task-Abbrüche bei der Peer-Prüfung weitergegeben werden, statt Peer-Verbindungen erneut zu versuchen. Die Behandlung getrennter Sitzungen bleibt erhalten.',
+      'ElectrumX kann das Datenverzeichnis und die Wallet von Namecoin Core nicht mehr lesen; es sieht nur noch das RPC-Cookie von Core. Erfordert Namecoin Core 32.1:3 oder neuer. ElectrumX sucht keine anderen Electrum-Server mehr und verbindet sich nicht mehr mit ihnen.',
     pl_PL:
-      'Naprawia sporadyczne zawieszanie się podczas zamykania przez propagowanie anulowania zadania podczas weryfikacji peerów zamiast ponawiania połączeń. Obsługa rozłączonych sesji pozostaje bez zmian.',
+      'ElectrumX nie może już odczytać katalogu danych ani portfela Namecoin Core; widzi tylko cookie RPC Core. Wymaga Namecoin Core 32.1:3 lub nowszego. ElectrumX nie wyszukuje już innych serwerów Electrum i nie łączy się z nimi.',
     fr_FR:
-      'Corrige les blocages intermittents à l’arrêt en propageant l’annulation des tâches pendant la vérification des pairs au lieu de réessayer les connexions. La gestion des sessions déconnectées est conservée.',
+      'ElectrumX ne peut plus lire le répertoire de données ni le portefeuille de Namecoin Core ; il ne voit plus que le cookie RPC de Core. Nécessite Namecoin Core 32.1:3 ou ultérieur. ElectrumX ne découvre plus d’autres serveurs Electrum et ne s’y connecte plus.',
   },
   migrations: {
     up: async () => {},

@@ -1,5 +1,6 @@
 import { FileHelper } from '@start9labs/start-sdk'
 import type { manifest as namecoindManifest } from 'namecoin-core-startos/startos/manifest'
+import { rpcCookieName, rpcVolumeId } from 'namecoin-core-startos/startos/utils'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { storeJson } from './fileModels/store.json'
 import { i18n } from './i18n'
@@ -43,7 +44,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
       })
       .mountDependency<typeof namecoindManifest>({
         dependencyId: 'namecoind',
-        volumeId: 'main',
+        volumeId: rpcVolumeId,
         subpath: null,
         mountpoint: namecoindDir,
         readonly: true,
@@ -67,9 +68,9 @@ export const main = sdk.setupMain(async ({ effects }) => {
   const rpc = await namecoindRpc(effects)
   if (!rpc) return waitForNamecoind()
 
-  // Namecoin Core rewrites its cookie on every start; an absent one means it is down.
+  // Namecoin Core republishes its cookie on every start; an absent one means it is down.
   const cookie = await FileHelper.string(
-    `${await sub.rootfs}${namecoindDir}/.cookie`,
+    `${await sub.rootfs}${namecoindDir}/${rpcCookieName}`,
   )
     .read((c) => c.trim())
     .const(effects)
@@ -88,6 +89,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
           DAEMON_URL: `http://${cookie}@${rpc}/`,
           SERVICES: `tcp://:${electrumPort},ws://:${wsPort},rpc://127.0.0.1:${adminRpcPort}`,
           ALLOW_ROOT: '1',
+          PEER_DISCOVERY: 'off',
           CACHE_MB: String(store.cacheMb),
           MAX_SESSIONS: String(store.maxSessions),
           LOG_LEVEL: store.logLevel,

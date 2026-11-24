@@ -25,7 +25,7 @@ The **Electrum** interface lists `ssl://` addresses, and the **Electrum WebSocke
 
 Your server's certificate is issued by your StartOS server, not a public authority, so a wallet must trust your server's root certificate to connect. Over Tor the same applies.
 
-In **Electrum-NMC**, open **Tools → Network**, turn off **Select server automatically**, and enter the host and port with `:s` at the end for SSL.
+Your server does not announce itself to other Electrum servers or connect to them, so wallets never find it on their own: enter it by hand. In **Electrum-NMC**, open **Tools → Network**, turn off **Select server automatically**, and enter the host and port with `:s` at the end for SSL.
 
 ## Settings and maintenance
 

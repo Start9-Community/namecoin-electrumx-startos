@@ -13,7 +13,7 @@ const namecoind = sdk.Dependency.required('namecoind', {
     icon: 'https://raw.githubusercontent.com/Start9-Community/namecoin-core-startos/main/icon.svg',
   },
   kind: 'running',
-  versionRange: '>=32.1:0',
+  versionRange: '>=32.1:3',
   healthChecks: ['namecoind'],
 }).withInit(async (effects) => {
   await sdk.action.createTask(
