@@ -130,7 +130,7 @@ Both volumes are copied wholesale, with `db/` excluded: the index rebuilds from 
 1. Mainnet only.
 2. Plaintext Electrum and WebSocket are reachable only from other services on the server; clients elsewhere use the TLS ports, which carry the StartOS certificate.
 3. ElectrumX's own `ssl://` and `wss://` listeners and certificate are not used; StartOS provides TLS.
-4. The server takes no part in the Electrum peer network: it does not announce itself (`REPORT_SERVICES` is unset) and does not discover or connect to other servers (`PEER_DISCOVERY=off`). A client asking for peers gets ElectrumX's built-in list of Namecoin servers.
+4. The server takes no part in the Electrum peer network: it does not announce itself (`REPORT_SERVICES` is unset) and does not discover or connect to other servers (`PEER_DISCOVERY=off`). A client asking for peers gets an empty list.
 5. ElectrumX runs as root in its container (`ALLOW_ROOT`).
 
 ---
